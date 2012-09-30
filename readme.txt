@@ -8,7 +8,7 @@ Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Automatically keep the remote picture to the local, and automatically generate thumbnails.
+Automatically keep the remote picture to the local, and automatically generate thumbnails.自动保持远程图片到本地，并且自动生成缩略图。
 
 
 == Description ==
