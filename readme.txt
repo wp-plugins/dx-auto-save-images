@@ -38,6 +38,8 @@ Automatically keep the remote picture to the local, and automatically generate t
 
 = 1.0 =
 * 发布dx-auto-save-images插件
+= 1.0.1 =
+* 修复粘贴优酷等视频代码时出错
 
 
 
