@@ -36,10 +36,14 @@ Automatically keep the remote picture to the local, and automatically generate t
 
 == Changelog ==
 
-= 1.0 =
-* 发布dx-auto-save-images插件
+= 1.2.0 =
+* 增加后台选项，自定义是否生成缩略图
+
 = 1.0.1 =
 * 修复粘贴优酷等视频代码时出错
+
+= 1.0 =
+* 发布dx-auto-save-images插件
 
 
 
