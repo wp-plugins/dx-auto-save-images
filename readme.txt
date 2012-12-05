@@ -32,7 +32,8 @@ Automatically keep the remote picture to the local, and automatically generate t
 
 == Screenshots ==
 
-1. 
+1. 后台截图1
+1. 后台截图2
 
 == Changelog ==
 
