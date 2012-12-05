@@ -3,7 +3,7 @@
 Plugin Name: DX-auto-save-images
 Plugin URI: http://www.daxiawp.com/dx-auto-save-images.html
 Description: Automatically keep the remote picture to the local, and automatically generate thumbnails. 自动保持远程图片到本地，并且自动生成缩略图。
-Version: 1.2.0
+Version: 1.3.0
 Author: 大侠wp
 Author URI: http://www.daxiawp.com/dx-auto-save-images.html
 Copyright: daxiawp开发的原创插件，任何个人或团体不可擅自更改版权。
@@ -17,12 +17,14 @@ class DX_Auto_Save_Images{
 		add_filter( 'content_save_pre',array($this,'post_save_images') );	//save images
 		add_action( 'admin_menu', array( $this, 'menu_page' ) );		//menu page
 		add_filter( 'intermediate_image_sizes_advanced', array( $this, 'remove_tmb' ) );	//remove tmb
+		add_action( 'submitpost_box', array( $this, 'submit_box' ) );	//submit_box
+		add_action( 'submitpage_box', array( $this, 'submit_box' ) );	//submit_box
 	}
 	
 	//save post exterior images
 	function post_save_images($content){
-		set_time_limit(240);
-		if($_POST['save'] || $_POST['publish']){
+		if( ($_POST['save'] || $_POST['publish']) && ($_POST['DS_switch']!='not_save') ){
+			set_time_limit(240);
 			global $post;
 			$post_id=$post->ID;
 			$preg=preg_match_all('/<img.*?src="(.*?)"/',stripslashes($content),$matches);
@@ -38,6 +40,7 @@ class DX_Auto_Save_Images{
 				}
 			}
 		}
+		remove_filter( 'content_save_pre', array( $this, 'post_save_images' ) );
 		return $content;
 	}
 	
@@ -45,7 +48,13 @@ class DX_Auto_Save_Images{
 	function save_images($image_url,$post_id){
 		$file=file_get_contents($image_url);
 		$filename=basename($image_url);
-		$res=wp_upload_bits($filename,'',$file);
+		$options = get_option( 'dx-auto-save-images-options' );
+		if( $options['chinese']=='yes' ){
+		  preg_match( '/(.*?)(\.\w+)$/', $filename, $match );
+		  $im_name = md5($match[1]).$match[2];		
+		}
+		else $im_name = $filename;
+		$res=wp_upload_bits($im_name,'',$file);
 		$this->insert_attachment($res['file'],$post_id);
 		return $res;
 	}
@@ -93,7 +102,9 @@ class DX_Auto_Save_Images{
 	function save_options(){
 		if( $_POST['submit'] ){
 			$data=array(
-				'tmb' => $_POST['tmb']
+				'tmb' => $_POST['tmb'],
+				'chinese' => $_POST['chinese'],
+				'switch' => $_POST['switch']
 			);
 			update_option( 'dx-auto-save-images-options', $data );
 		}
@@ -107,6 +118,14 @@ class DX_Auto_Save_Images{
 			$sizes = array();
 		}
 		return $sizes;
+	}
+	
+	//get_sample_permalink_html
+	function submit_box(  ){
+		$options = get_option( 'dx-auto-save-images-options' );
+		if( $options['switch'] == 'yes' ){
+			echo '<span style="padding-bottom:5px;display:inline-block;"><input type="checkbox" name="DS_switch" value="not_save"/> 不保存远程图片.</span>';
+		}
 	}
 
 }
