@@ -3,7 +3,7 @@
 Plugin Name: DX-auto-save-images
 Plugin URI: http://www.daxiawp.com/dx-auto-save-images.html
 Description: Automatically keep the remote picture to the local, and automatically generate thumbnails. 自动保持远程图片到本地，并且自动生成缩略图。
-Version: 1.3.0
+Version: 1.3.1
 Author: 大侠wp
 Author URI: http://www.daxiawp.com/dx-auto-save-images.html
 Copyright: daxiawp开发的原创插件，任何个人或团体不可擅自更改版权。
@@ -22,8 +22,8 @@ class DX_Auto_Save_Images{
 	}
 	
 	//save post exterior images
-	function post_save_images($content){
-		if( ($_POST['save'] || $_POST['publish']) && ($_POST['DS_switch']!='not_save') ){
+	function post_save_images( $content, $DX_save_images='' ){
+		if( ($_POST['save'] || $_POST['publish'] || ($DX_save_images=='on') ) && ($_POST['DS_switch']!='not_save') ){
 			set_time_limit(240);
 			global $post;
 			$post_id=$post->ID;

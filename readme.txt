@@ -37,6 +37,9 @@ Automatically keep the remote picture to the local, and automatically generate t
 
 == Changelog ==
 
+= 1.3.1 =
+* 修复bug
+
 = 1.3.0 =
 * 支持中文图片
 * 可独立选择是否保存该文章的远程图片
