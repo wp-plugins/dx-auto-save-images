@@ -3,7 +3,7 @@ Contributors: daxiawp
 Donate link: http://www.daxiawp.com
 Tags: auto save images, images, auto save, Remote images, External images, save images
 Requires at least: 3.1
-Tested up to: 3.4.2
+Tested up to: 3.5
 Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -36,6 +36,10 @@ Automatically keep the remote picture to the local, and automatically generate t
 1. 后台截图2
 
 == Changelog ==
+
+= 1.4.0 =
+* 支持wordpress3.5
+* 增加自动添加特色图像功能
 
 = 1.3.1 =
 * 修复bug

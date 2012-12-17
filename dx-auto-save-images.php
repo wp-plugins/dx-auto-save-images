@@ -3,7 +3,7 @@
 Plugin Name: DX-auto-save-images
 Plugin URI: http://www.daxiawp.com/dx-auto-save-images.html
 Description: Automatically keep the remote picture to the local, and automatically generate thumbnails. 自动保持远程图片到本地，并且自动生成缩略图。
-Version: 1.3.1
+Version: 1.4.0
 Author: 大侠wp
 Author URI: http://www.daxiawp.com/dx-auto-save-images.html
 Copyright: daxiawp开发的原创插件，任何个人或团体不可擅自更改版权。
@@ -22,21 +22,23 @@ class DX_Auto_Save_Images{
 	}
 	
 	//save post exterior images
-	function post_save_images( $content, $DX_save_images='' ){
-		if( ($_POST['save'] || $_POST['publish'] || ($DX_save_images=='on') ) && ($_POST['DS_switch']!='not_save') ){
+	function post_save_images( $content ){
+		if( ($_POST['save'] || $_POST['publish']) && ($_POST['DS_switch']!='not_save') ){
 			set_time_limit(240);
 			global $post;
 			$post_id=$post->ID;
 			$preg=preg_match_all('/<img.*?src="(.*?)"/',stripslashes($content),$matches);
 			if($preg){
+				$i = 1;
 				foreach($matches[1] as $image_url){
 					if(empty($image_url)) continue;
 					$pos=strpos($image_url,get_bloginfo('url'));
 					if($pos===false){
-						$res=$this->save_images($image_url,$post_id);
+						$res=$this->save_images($image_url,$post_id,$i);
 						$replace=$res['url'];
 						$content=str_replace($image_url,$replace,$content);
 					}
+					$i++;
 				}
 			}
 		}
@@ -45,7 +47,7 @@ class DX_Auto_Save_Images{
 	}
 	
 	//save exterior images
-	function save_images($image_url,$post_id){
+	function save_images($image_url,$post_id,$i){
 		$file=file_get_contents($image_url);
 		$filename=basename($image_url);
 		$options = get_option( 'dx-auto-save-images-options' );
@@ -55,7 +57,10 @@ class DX_Auto_Save_Images{
 		}
 		else $im_name = $filename;
 		$res=wp_upload_bits($im_name,'',$file);
-		$this->insert_attachment($res['file'],$post_id);
+		$attach_id = $this->insert_attachment($res['file'],$post_id);
+		if( $options['post-tmb']=='yes' && $i==1 ){
+			set_post_thumbnail( $post_id, $attach_id );
+		}
 		return $res;
 	}
 	
@@ -104,7 +109,8 @@ class DX_Auto_Save_Images{
 			$data=array(
 				'tmb' => $_POST['tmb'],
 				'chinese' => $_POST['chinese'],
-				'switch' => $_POST['switch']
+				'switch' => $_POST['switch'],
+				'post-tmb' => $_POST['post-tmb']
 			);
 			update_option( 'dx-auto-save-images-options', $data );
 		}
